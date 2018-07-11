@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import AdventureDetail from './src/screens/Home/components/AdventureDetail'
+import AdventureOverview from './src/screens/Home/components/AdventuresOverview'
+
 import { createStackNavigator } from 'react-navigation';
+import AdventuresOverview from './src/screens/Home/components/AdventuresOverview';
 
 export default class App extends React.Component {
   render() {
@@ -13,6 +16,7 @@ export default class App extends React.Component {
         <Text>Changes you make will automatically reload.</Text>
         <Text>Shake your phone to open the developer menu.</Text>
         <Text>Testdd{i}</Text>
+        <AdventuresOverview />
         <AdventureDetail adventureName="Stop the golem" parentStyles={c} />
       </View>
     );

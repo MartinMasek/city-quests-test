@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native';
-import styles from './styles';
+import { Text, View } from 'react-native'
+import styles from './styles'
 
 export default class AdventureDetail extends Component {
     render() {
