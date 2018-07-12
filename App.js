@@ -1,24 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import AdventureDetail from './src/screens/Home/components/AdventureDetail'
-import AdventureOverview from './src/screens/Home/components/AdventuresOverview'
-
-import { createStackNavigator } from 'react-navigation';
-import AdventuresOverview from './src/screens/Home/components/AdventuresOverview';
+import FooWrapper from './src/screens/Home/components/FooWrapper'
+import { Provider } from 'react-redux';
+import store from './store';
 
 export default class App extends React.Component {
+
   render() {
-    let i = 10
+    let i = 100
     let c = styles.blackText
+
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-        <Text>Testdd{i}</Text>
-        <AdventuresOverview />
-        <AdventureDetail adventureName="Stop the golem" parentStyles={c} />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <Text>Open up App.js to start working on your app!</Text>
+          <Text>Changes you make will automatically reload.</Text>
+          <Text>Shake your phone to open the developer menu.</Text>
+          <Text>Testdd{i}</Text>
+          <FooWrapper />
+          <AdventureDetail adventureName="Stop the golem" parentStyles={c} />
+        </View>
+      </Provider>
     );
   }
 }
@@ -29,10 +32,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'moccasin',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop:30,
+    marginTop: 30,
   },
-  blackText:{
-    color:'black'
+  blackText: {
+    color: 'black'
   }
 });
 
