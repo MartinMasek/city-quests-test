@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo/vector-icons": "^6.3.1",
     "eslint": "^5.0.0",
     "expo": "^27.0.1",
     "npm": "^6.1.0",

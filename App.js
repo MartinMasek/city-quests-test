@@ -1,171 +1,103 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import AdventureDetail from './src/screens/Home/components/AdventureDetail'
-import FooWrapper from './src/screens/Home/components/FooWrapper'
 import { Provider } from 'react-redux';
 import store from './store';
-import { createStackNavigator } from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
+import { Ionicons } from '@expo/vector-icons'
+import { AppLoading, Asset, Font } from 'expo';
+
+function cacheImages(images) {
+  return images.map(image => {
+    if (typeof image === 'string') {
+      return Image.prefetch(image);
+    } else {
+      return Asset.fromModule(image).downloadAsync();
+    }
+  });
+}
+
+function cacheFonts(fonts) {
+  return fonts.map(font => Font.loadAsync(font));
+}
 
 export default class App extends React.Component {
+  state = {
+    isReady: false,
+  };
+
+  async _loadAssetsAsync() {
+    const fontAssets = cacheFonts([Ionicons.font]);
+
+    await Promise.all([...fontAssets]);
+  }
+
   render() {
+    // if (!this.state.isReady) {
+    //   return (
+    //     <AppLoading
+    //       startAsync={this._loadAssetsAsync}
+    //       onFinish={() => this.setState({ isReady: true })}
+    //       onError={console.warn}
+    //     />
+    //   );
+    // }
+
     return (
-      <Provider store={store}>
-        <RootStack />
-      </Provider>
+      <View>
+        <Ionicons name="md-arrow-dropup" size={32} color="green" />
+      </View>
     );
   }
 
 }
 
 class HomeScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Inventory',
-      headerRight: (
-        <Button
-          onPress={() => alert('This is a button!')}
-          title="Info"
-          color="#fff"
-        />
-      ),
-      headerLeft: (
-        <Button
-          onPress={() => navigation.navigate("MyModal")}
-          title="MM"
-          color="#fff"
-        />
-      )
-    }
-  };
-
   render() {
     return (
-      <View style={styles.container}>
-        <FooWrapper />
-        <AdventureDetail adventureName="Stop the golem" parentStyles={styles.blackText} />
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text>Home Screen</Text>
-          <Button
-            title="Go to Details"
-            onPress={() => {
-              /* 1. Navigate to the Details route with params */
-              this.props.navigation.navigate('Details', {
-                itemId: 86,
-                otherParam: 'anything you want here',
-              });
-            }}
-          />
-        </View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Home!</Text>
+        <Ionicons name="md-checkmark-circle" size={32} color="green" />
       </View>
     );
   }
 }
 
-class DetailsScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      title: navigation.getParam('otherParam', 'A Nested Details Screen'),
-      headerStyle: {
-        backgroundColor: navigationOptions.headerTintColor,
-      },
-      headerTintColor: navigationOptions.headerStyle.backgroundColor,
-      headerTitleStyle: {
-        fontWeight: 'normal'
-      }
-    }
-  };
-
+class SettingsScreen extends React.Component {
   render() {
-    /* 2. Get the param, provide a fallback value if not available */
-    const { navigation } = this.props;
-    const itemId = navigation.getParam('itemId', 'NO-ID');
-    const otherParam = navigation.getParam('otherParam', 'some default value');
-
-    console.debug(JSON.stringify(this.props.navigation))
-
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Details Screen</Text>
-        <Text>itemId: {JSON.stringify(itemId)}</Text>
-        <Text>otherParam: {JSON.stringify(otherParam)}</Text>
-        <Button
-          title="Go to Details... again"
-          onPress={() =>
-            this.props.navigation.push('Details', {
-              itemId: Math.floor(Math.random() * 100),
-            })}
-        />
-        <Button
-          title="Go to Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
-        <Button
-          title="Go back"
-          onPress={() => this.props.navigation.goBack()}
-        />
-        <Button
-          title="Update the title"
-          onPress={() => this.props.navigation.setParams({ otherParam: 'Updated!' })}
-        />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Settings!</Text>
       </View>
     );
   }
 }
 
-class ModalScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ fontSize: 30 }}>This is a modal!</Text>
-        <Button
-          onPress={() => this.props.navigation.goBack()}
-          title="Dismiss"
-        />
-      </View>
-    );
-  }
-}
 
-const MainStack = createStackNavigator(
+const RootStack = createBottomTabNavigator(
   {
     Home: HomeScreen,
-    Details: DetailsScreen
+    Settings: SettingsScreen
   },
   {
-    initialRouteName: 'Home',
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#f4511e"
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      }
-    }
-  }
-);
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        if (routeName === 'Home') {
+          iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Settings') {
+          iconName = `ios-options${focused ? '' : '-outline'}`;
+        }
 
-const RootStack = createStackNavigator(
-  {
-    Main: MainStack,
-    MyModal: ModalScreen
-  },
-  {
-    mode: 'modal',
-    headerMode: 'none'
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return <Text>DDD</Text>
+        return <Ionicons name="md-checkmark-circle" size={32} color="green" />
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+    },
   }
 )
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'moccasin',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  blackText: {
-    color: 'black'
-  }
-});
-
-
