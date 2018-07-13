@@ -1,3 +1,8 @@
+// ----------------------------
+// OLD file saved as an example
+// ----------------------------
+
+
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import AdventureDetail from './src/screens/Home/components/AdventureDetail'
